@@ -9,6 +9,11 @@
         component: './user/Login',
       },
       {
+        name: 'register',
+        path: '/user/register',
+        component: './user/Register',
+      },
+      {
         component: './404',
       },
     ],
@@ -21,15 +26,16 @@
   },
   {
     path: '/admin',
-    name: 'admin',
+    name: '管理页',
     icon: 'crown',
     access: 'canAdmin',
+    component: './Admin',
     routes: [
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
+        path: '/admin/user-manage',
+        name: '用户管理',
         icon: 'smile',
-        component: './Welcome',
+        component: './Admin/UserManager',
       },
       {
         component: './404',
