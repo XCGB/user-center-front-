@@ -1,7 +1,9 @@
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import {ProTable,  TableDropdown } from '@ant-design/pro-components';
-import { searchUsers } from '@/services/ant-design-pro/api';
-import { useRef } from 'react';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
+import {ProTable } from '@ant-design/pro-components';
+import {searchUsers} from '@/services/ant-design-pro/api';
+import {useRef } from 'react';
+import {Button, Image, Space, Tag} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -22,20 +24,29 @@ const columns: ProColumns<API.CurrentUser>[] = [
     dataIndex: 'avatarUrl',
     render: (_, record) => (
       <div>
-        <img src={record.avatarUrl} width={100}></img>
+        <Image src={record.avatarUrl} width={100}></Image>
       </div>
     ),
   },
   {
     title: '性别',
     dataIndex: 'gender',
+    filters: true,
+    onFilter: true,
     valueType: 'select',
     valueEnum: {
-      0: { text: '男', status:'Success' },//颜色是红色
-      1: {
-        text: '女',
-        status: 'Success', //颜色是灰色
-      },
+      // all: {text: '超长'.repeat(50)},
+      0: {text: '男', status: 'success'},
+      1: {text: '女', status: 'success'},
+    },
+    render: (text, record) => {
+      const genderLabel = record.gender === 0 ? '男' : '女';
+      const genderColor = record.gender === 0 ? 'seagreen' : 'cornflowerblue'; // 海绿色 矢车菊蓝
+      return (
+        <Space>
+          <Tag color={genderColor}>{genderLabel}</Tag>
+        </Space>
+      );
     },
   },
   {
@@ -49,9 +60,11 @@ const columns: ProColumns<API.CurrentUser>[] = [
   {
     title: '状态',
     dataIndex: 'userStatus',
+    filters: true,
+    onFilter: true,
     valueType: 'select',
     valueEnum: {
-      0: { text: '正常', status:'Success' },//颜色是红色
+      0: {text: '正常', status: 'Success'},//颜色是红色
       1: {
         text: '非法',
         status: 'Error', //颜色是灰色
@@ -61,9 +74,11 @@ const columns: ProColumns<API.CurrentUser>[] = [
   {
     title: '角色',
     dataIndex: 'userRole',
+    filters: true,
+    onFilter: true,
     valueType: 'select',
     valueEnum: {
-      0: { text: '普通用户', status:'Default' },
+      0: {text: '普通用户', status: 'Default'},
       1: {
         text: '管理员',
         status: 'Success', //颜色是绿色
@@ -88,16 +103,8 @@ const columns: ProColumns<API.CurrentUser>[] = [
         编辑
       </a>,
       <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-        查看
+        删除
       </a>,
-      <TableDropdown
-        key="actionGroup"
-        onSelect={() => action?.reload()}
-        menus={[
-          { key: 'copy', name: '复制' },
-          { key: 'delete', name: '删除' },
-        ]}
-      />,
     ],
   },
 ];
@@ -110,10 +117,9 @@ export default () => {
       columns={columns}
       actionRef={actionRef}
       cardBordered
-      // @ts-ignore
       request={async (params = {}, sort, filter) => {
-        console.log(sort, filter);
-        const userList = await searchUsers();
+        console.log(params, sort, filter);
+        const userList = await searchUsers(params);
         return {
           data: userList
         }
@@ -146,6 +152,18 @@ export default () => {
       }}
       dateFormatter="string"
       headerTitle="高级表格"
+      toolBarRender={() => [
+        <Button
+          key="button"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            actionRef.current?.reload();
+          }}
+          type="primary"
+        >
+          新建
+        </Button>,
+        ]}
     />
   );
 };
