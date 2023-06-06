@@ -41,12 +41,14 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   if (NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
     return {
+      // @ts-ignore
       fetchUserInfo,
       settings: defaultSettings,
     };
   }
   const currentUser = await fetchUserInfo();
   return {
+    // @ts-ignore
     fetchUserInfo,
     currentUser,
     settings: defaultSettings,

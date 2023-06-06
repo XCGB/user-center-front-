@@ -19,7 +19,7 @@ const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
   const intl = useIntl();
   const handleSubmit = async (values: API.RegisterParams) => {
-    const { userAccount,userPassword,checkPassword } = values;
+    const { userPassword,checkPassword } = values;
     // 校验
     if (userPassword !== checkPassword){
       message.error('两次密码输入不一致');
@@ -28,24 +28,21 @@ const Register: React.FC = () => {
 
     try {
       // 注册
-      // const user = await register({ userAccount,userPassword,checkPassword });
-      const id = await register({ userAccount,userPassword,checkPassword });
-      if (id > 0) {
+      const id = await register(values);
+      if (id) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
 
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
-        const { query } = history.location;
+        const {query} = history.location;
         history.push({
-          pathname:'/user/login',
+          pathname: '/user/login',
           query,
         });
         return;
-      } else {
-        throw new Error(`register error id = ${id}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
       message.error(defaultLoginFailureMessage);
     }

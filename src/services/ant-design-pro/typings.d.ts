@@ -44,6 +44,14 @@ declare namespace API {
     progress?: number;
   };
 
+  // 对接后端通用返回类
+  type BaseResponse<T> = {
+    code: number;
+    data: T;
+    message: string;
+    description: string;
+  }
+
   type RuleList = {
     data?: RuleListItem[];
     /** 列表的内容总数 */

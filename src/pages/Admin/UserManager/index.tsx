@@ -1,9 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {ProTable,  TableDropdown } from '@ant-design/pro-components';
 import { searchUsers } from '@/services/ant-design-pro/api';
-import { Image } from 'antd';
 import { useRef } from 'react';
-
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -24,7 +22,6 @@ const columns: ProColumns<API.CurrentUser>[] = [
     dataIndex: 'avatarUrl',
     render: (_, record) => (
       <div>
-        {/* <Image src={record.avatarUrl} width={100}/> */}
         <img src={record.avatarUrl} width={100}></img>
       </div>
     ),
@@ -78,48 +75,48 @@ const columns: ProColumns<API.CurrentUser>[] = [
     dataIndex: 'createTime',
     valueType: 'dateTime',
   },
-
-  // {
-  //   title: '操作',
-  //   valueType: 'option',
-  //   // key: 'option',
-  //   render: (text, record, _, action) => [
-  //     <a
-  //       key="editable"
-  //       onClick={() => {
-  //         action?.startEditable?.(record.id);
-  //       }}
-  //     >
-  //       编辑
-  //     </a>,
-  //     <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-  //       查看
-  //     </a>,
-  //     <TableDropdown
-  //       key="actionGroup"
-  //       onSelect={() => action?.reload()}
-  //       menus={[
-  //         { key: 'copy', name: '复制' },
-  //         { key: 'delete', name: '删除' },
-  //       ]}
-  //     />,
-  //   ],
-  // },
+  {
+    title: '操作',
+    valueType: 'option',
+    render: (text, record, _, action) => [
+      <a
+        key="editable"
+        onClick={() => {
+          action?.startEditable?.(record.id);
+        }}
+      >
+        编辑
+      </a>,
+      <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
+        查看
+      </a>,
+      <TableDropdown
+        key="actionGroup"
+        onSelect={() => action?.reload()}
+        menus={[
+          { key: 'copy', name: '复制' },
+          { key: 'delete', name: '删除' },
+        ]}
+      />,
+    ],
+  },
 ];
 
-const Admin: React.FC = () => {
+export default () => {
   const actionRef = useRef<ActionType>();
+
   return (
     <ProTable<API.CurrentUser>
       columns={columns}
       actionRef={actionRef}
       cardBordered
+      // @ts-ignore
       request={async (params = {}, sort, filter) => {
         console.log(sort, filter);
         const userList = await searchUsers();
         return {
           data: userList
-        }      
+        }
       }}
       editable={{
         type: 'multiple',
@@ -127,9 +124,6 @@ const Admin: React.FC = () => {
       columnsState={{
         persistenceKey: 'pro-table-singe-demos',
         persistenceType: 'localStorage',
-        // onChange(value) {
-        //   console.log('value: ', value);
-        // },
       }}
       rowKey="id"
       search={{
@@ -149,14 +143,9 @@ const Admin: React.FC = () => {
       }}
       pagination={{
         pageSize: 5,
-        // onChange: (page) => console.log(page),
       }}
       dateFormatter="string"
       headerTitle="高级表格"
-   
     />
   );
 };
-
-export default Admin;
-
