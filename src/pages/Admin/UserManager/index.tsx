@@ -1,10 +1,51 @@
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable } from '@ant-design/pro-components';
-import {searchUsers} from '@/services/ant-design-pro/api';
-import {useRef } from 'react';
-import {Button, Image, Space, Tag} from "antd";
+import {deleteUsers, searchUsers} from '@/services/ant-design-pro/api';
+import {useRef, useState} from 'react';
+import {Button, Form, Image, Input, message, Modal, Space, Tag} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 
+// 弹出新增用户界面
+const UserFormModal = ({ visible, onCancel, onCreate }) => {
+  const [form] = Form.useForm();
+
+  const handleOk = () => {
+    form.validateFields().then((values) => {
+      form.resetFields();
+      onCreate(values);
+    });
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      title="新增用户"
+      okText="创建"
+      cancelText="取消"
+      onCancel={onCancel}
+      onOk={handleOk}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="用户名"
+          label="Username"
+          rules={[{ required: true, message: 'Please input the username!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="邮箱"
+          label="Email"
+          rules={[{ required: true, message: 'Please input the email!' }]}
+        >
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
+// 定义列的属性
 const columns: ProColumns<API.CurrentUser>[] = [
   {
     dataIndex: 'id',
@@ -102,17 +143,50 @@ const columns: ProColumns<API.CurrentUser>[] = [
       >
         编辑
       </a>,
-      <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
+      <a
+        key="delete"
+        onClick={() => {
+          const deleteConfirmationModal = Modal.confirm({
+            title: '删除用户',
+            content: ' 请确认是否删除用户!',
+            onOk: () => {
+              deleteConfirmationModal.destroy();
+              deleteUsers(record.id)
+                .then(() => {
+                  return message.success('用户删除成功');
+                })
+                .catch((error) => {
+                  return  message.error('用户删除失败');
+                });
+            },
+            onCancel: () => {
+              deleteConfirmationModal.destroy();
+            },
+          });
+        }}
+      >
         删除
       </a>,
     ],
   },
 ];
 
+
 export default () => {
+  const [showForm, setShowForm] = useState(false);
   const actionRef = useRef<ActionType>();
 
+  const handleCreateUser = (values: any) => {
+    console.log('Received values of form:', values);
+    setShowForm(false);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+  };
+
   return (
+    <div>
     <ProTable<API.CurrentUser>
       columns={columns}
       actionRef={actionRef}
@@ -157,13 +231,19 @@ export default () => {
           key="button"
           icon={<PlusOutlined />}
           onClick={() => {
-            actionRef.current?.reload();
+            setShowForm(true);
           }}
           type="primary"
         >
           新建
         </Button>,
+        <UserFormModal
+          visible={showForm}
+          onCancel={handleCancel}
+          onCreate={handleCreateUser}
+        />,
         ]}
     />
+    </div>
   );
 };

@@ -47,10 +47,19 @@ export async function searchUsers(options?: { [key: string]: any }) {
   return request<API.BaseResponse<API.CurrentUser[]>>('/api/user/search', {
     method: 'GET',
     params: options, // 将options作为查询参数传递给后端
-    // ...(options || {}),
   });
 }
 
+/** 删除用户 GET /api/user/delete */
+export async function deleteUsers(options?: number) {
+  return request<API.BaseResponse<API.CurrentUser[]>>('/api/user/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { id: options }, // 将 options 作为请求体传递给后端，可以根据实际需求进行调整
+  });
+}
 
 /** 此处后端没有提供注释 GET /api/notices */
 export async function getNotices(options?: { [key: string]: any }) {
