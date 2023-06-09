@@ -23,6 +23,9 @@ declare namespace API {
 
   type RegisterResult = number;
 
+  type UploadResult = string;
+
+
   type PageParams = {
     current?: number;
     pageSize?: number;
@@ -76,6 +79,16 @@ declare namespace API {
     checkPassword?: string;
     type?: string;
   };
+
+  type AppendParams = {
+    username: string;
+    userAccount: string;
+    avatarUrl?: string;
+    gender: number;
+    phone: string;
+    email: string;
+  };
+
 
   type ErrorResponse = {
     /** 业务约定的错误码 */

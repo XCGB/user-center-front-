@@ -57,7 +57,33 @@ export async function deleteUsers(options?: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-    data: { id: options }, // 将 options 作为请求体传递给后端，可以根据实际需求进行调整
+    data: {id: options}, // 将 options 作为请求体传递给后端，可以根据实际需求进行调整
+  });
+}
+
+/** 上传图片 POST /api/upload */
+export async function uploadAvatar(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  return await request<API.BaseResponse<API.UploadResult>>('/api/upload/avatar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+  });
+}
+
+/** 新增用户 POST /api/user/append */
+export async function appendUser(body: API.AppendParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.RegisterResult>>('/api/user/append', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
   });
 }
 
