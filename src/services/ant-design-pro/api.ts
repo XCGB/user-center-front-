@@ -87,6 +87,20 @@ export async function appendUser(body: API.AppendParams, options?: { [key: strin
   });
 }
 
+/**
+ * 更新用户（管理员）
+ * @param params
+ */
+export async function updateLoginUser(params: API.UserUpdateRequest) {
+  return request<API.BaseResponse<boolean>>(`/api/user/update`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: params,
+  });
+}
+
 /** 此处后端没有提供注释 GET /api/notices */
 export async function getNotices(options?: { [key: string]: any }) {
   return request<API.BaseResponse<API.NoticeIconList>>('/api/notices', {

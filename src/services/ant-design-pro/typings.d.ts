@@ -89,6 +89,18 @@ declare namespace API {
     email: string;
   };
 
+  /**
+   * 用户更新请求
+   */
+  interface UserUpdateRequest {
+    id: number;
+    username?: string;
+    userAccount?: string;
+    avatarUrl?: string;
+    gender?: number;
+    userRole?: number;
+  }
+
 
   type ErrorResponse = {
     /** 业务约定的错误码 */
