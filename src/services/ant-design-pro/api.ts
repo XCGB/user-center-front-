@@ -87,12 +87,9 @@ export async function appendUser(body: API.AppendParams, options?: { [key: strin
   });
 }
 
-/**
- * 更新用户（管理员）
- * @param params
- */
-export async function updateLoginUser(params: API.UserUpdateRequest) {
-  return request<API.BaseResponse<boolean>>(`/api/user/update`, {
+
+export async function updateLoginUser(id: number, params: API.UserUpdateRequest) {
+  return request<API.BaseResponse<boolean>>(`/api/user/update/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

@@ -48,7 +48,7 @@ export default [
     redirect: '/welcome',
   },
   {
-    name: '个人设置',
+    name: 'account.settings',
     icon: 'smile',
     path: '/account/settings',
     component: './Account',

@@ -80,6 +80,7 @@ declare namespace API {
     type?: string;
   };
 
+
   type AppendParams = {
     username: string;
     userAccount: string;
@@ -93,7 +94,6 @@ declare namespace API {
    * 用户更新请求
    */
   interface UserUpdateRequest {
-    id: number;
     username?: string;
     userAccount?: string;
     avatarUrl?: string;

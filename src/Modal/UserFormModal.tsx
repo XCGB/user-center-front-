@@ -27,9 +27,9 @@ export const UserFormModal = ({ visible, onCancel, onCreate }) => {
         const url  = await uploadAvatar(originFileObj);
         form.setFieldsValue({ avatarUrl: url }); // 将URL设置到表单字段中
         setAvatarUrl(url); // 设置头像URL
-        message.success('头像上传到阿里OSS成功');
+        message.success('头像上传成功');
       } catch (error) {
-        message.error('头像上传OSS失败');
+        message.error('头像上传失败');
       }
     } else if (status === 'error') {
       // 上传失败
